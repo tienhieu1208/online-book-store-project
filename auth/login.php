@@ -2,6 +2,9 @@
 <?php require "../config/config.php"; ?>
 
 <?php
+if (isset($_SESSION['username'])) {
+    header("location: " . APP_URL . "");
+}
 
 if (isset($_POST['submit'])) {
     if (empty($_POST['email']) or empty($_POST['password'])) {
@@ -17,7 +20,12 @@ if (isset($_POST['submit'])) {
 
         if ($login->rowCount() > 0) {
             if (password_verify($password, $fetch['mypassword'])) {
-                echo "LOG IN SUCCESSFULLY!";
+
+                $_SESSION['username'] = $fetch['username'];
+                $_SESSION['user_id'] = $fetch['id'];
+
+                header("location: " . APP_URL . "");
+
             } else {
                 echo "<script>alert('Email or password are incorrect!');</script>";
             }
