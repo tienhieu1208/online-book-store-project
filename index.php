@@ -12,7 +12,6 @@
                 <p>Monotonectally enable customized
                     growth strategies and 24/7 portals. functional opportunities. </p>
                 <a href="#" class="btn btn-primary w-100 rounded my-2"> More<i class="fas fa-arrow-right"></i> </a>
-
             </div>
         </div>
     </div>
