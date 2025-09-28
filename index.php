@@ -19,7 +19,7 @@ $allRows = $rows->fetchAll(PDO::FETCH_OBJ);
                     <h5 class="d-inline">
                         <div class="text-muted d-inline">($<?php echo $products->price; ?>/item)</div>
                     </h5>
-                    <p><?php echo $products->description; ?> </p>
+                    <p><?php echo substr($products->description, 0, 150); ?> </p>
                     <a href="<?php echo APP_URL ?>/shopping/single.php?id=<?php echo $products->id; ?>"
                         class="btn btn-primary w-100 rounded my-2"> More <i class="fas fa-arrow-right"></i> </a>
                 </div>
