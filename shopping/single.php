@@ -3,6 +3,29 @@
 
 <?php
 
+if (isset($_POST['submit'])) {
+    $pro_id = $_POST['pro_id'];
+    $pro_name = $_POST['pro_name'];
+    $pro_image = $_POST['pro_image'];
+    $pro_price = $_POST['pro_price'];
+    $pro_amount = $_POST['pro_amount'];
+    $pro_file = $_POST['pro_file'];
+    $user_id = $_POST['user_id'];
+
+    $insert = $conn->prepare("INSERT INTO cart (pro_id, pro_name, pro_image, pro_price, pro_amount, pro_file, user_id)
+    VALUE(:pro_id, :pro_name, :pro_image, :pro_price, :pro_amount, :pro_file, :user_id) ");
+
+    $insert->execute([
+        ':pro_id' => $pro_id,
+        ':pro_name' => $pro_name,
+        ':pro_image' => $pro_image,
+        ':pro_price' => $pro_price,
+        ':pro_amount' => $pro_amount,
+        ':pro_file' => $pro_file,
+        ':user_id' => $user_id,
+    ]);
+}
+
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
@@ -40,11 +63,40 @@ if (isset($_GET['id'])) {
                                     class="act-price">$<?php echo $product->price ?></span>
                             </div>
                         </div>
-                        <p class="about"><?php echo $product->description ?></p>
-
-                        <div class="cart mt-4 align-items-center"> <button
-                                class="btn btn-primary text-uppercase mr-2 px-4"><i class="fas fa-shopping-cart"></i>
-                                Add to cart</button> </div>
+                        <p class="about"><?php echo $product->description; ?></p>
+                        <form method="post" id="form-data">
+                            <div class="">
+                                <input type="text" name="pro_id" class="form-control"
+                                    value="<?php echo $product->id; ?>">
+                            </div>
+                            <div class="">
+                                <input type="text" name="pro_name" class="form-control"
+                                    value="<?php echo $product->name; ?>">
+                            </div>
+                            <div class="">
+                                <input type="text" name="pro_image" class="form-control"
+                                    value="<?php echo $product->image; ?>">
+                            </div>
+                            <div class="">
+                                <input type="text" name="pro_price" class="form-control"
+                                    value="<?php echo $product->price; ?>">
+                            </div>
+                            <div class="">
+                                <input type="text" name="pro_amount" class="form-control" value="1">
+                            </div>
+                            <div class="">
+                                <input type="text" name="pro_file" class="form-control"
+                                    value="<?php echo $product->file; ?>">
+                            </div>
+                            <div class="">
+                                <input type="text" name="user_id" class="form-control"
+                                    value="<?php echo $_SESSION['user_id']; ?>">
+                            </div>
+                            <div class="cart mt-4 align-items-center"> <button name="submit" type="submit"
+                                    class="btn btn-primary text-uppercase mr-2 px-4"><i
+                                        class="fas fa-shopping-cart"></i>
+                                    Add to cart</button> </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -53,3 +105,22 @@ if (isset($_GET['id'])) {
 </div>
 
 <?php require "../includes/footer.php"; ?>
+
+<script>
+    $(document).ready(function () {
+        $(document).on("submit", function (e) {
+            e.preventDefault();
+            var formdata = $("#form-data").serialize() + '&submit=submit';
+
+            $.ajax({
+                type: "post",
+                url: "single.php?id=<?php echo $id; ?>",
+                data: formdata,
+
+                success: function () {
+                    alert("Add to cart successfully!");
+                }
+            })
+        })
+    });
+</script>
