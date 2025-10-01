@@ -31,8 +31,11 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
     // Checking for product in cart
-    $select = $conn->query("SELECT * FROM cart WHERE pro_id = '$id' AND user_id = '$_SESSION[user_id]'");
-    $select->execute();
+    if (isset($_SESSION['user_id'])) {
+        $select = $conn->query("SELECT * FROM cart WHERE pro_id = '$id' AND user_id = '$_SESSION[user_id]'");
+        $select->execute();
+    }
+
 
     // Getting data for every product
     $row = $conn->query("SELECT * FROM products WHERE status = 1 AND id = '$id'");
@@ -45,7 +48,7 @@ if (isset($_GET['id'])) {
 
 ?>
 
-<div class="row d-flex justify-content-center">
+<div class="row d-flex justify-content-center mt-4">
     <div class="col-md-10">
         <div class="card">
             <div class="row">
@@ -72,45 +75,49 @@ if (isset($_GET['id'])) {
                         <p class="about"><?php echo $product->description; ?></p>
                         <form method="post" id="form-data">
                             <div class="">
-                                <input type="text" name="pro_id" class="form-control"
+                                <input type="hidden" name="pro_id" class="form-control"
                                     value="<?php echo $product->id; ?>">
                             </div>
                             <div class="">
-                                <input type="text" name="pro_name" class="form-control"
+                                <input type="hidden" name="pro_name" class="form-control"
                                     value="<?php echo $product->name; ?>">
                             </div>
                             <div class="">
-                                <input type="text" name="pro_image" class="form-control"
+                                <input type="hidden" name="pro_image" class="form-control"
                                     value="<?php echo $product->image; ?>">
                             </div>
                             <div class="">
-                                <input type="text" name="pro_price" class="form-control"
+                                <input type="hidden" name="pro_price" class="form-control"
                                     value="<?php echo $product->price; ?>">
                             </div>
                             <div class="">
-                                <input type="text" name="pro_amount" class="form-control" value="1">
+                                <input type="hidden" name="pro_amount" class="form-control" value="1">
                             </div>
                             <div class="">
-                                <input type="text" name="pro_file" class="form-control"
+                                <input type="hidden" name="pro_file" class="form-control"
                                     value="<?php echo $product->file; ?>">
                             </div>
-                            <div class="">
-                                <input type="text" name="user_id" class="form-control"
-                                    value="<?php echo $_SESSION['user_id']; ?>">
-                            </div>
+                            <?php if (isset($_SESSION['user_id'])): ?>
+                                <div class="">
+                                    <input type="text" name="user_id" class="form-control"
+                                        value="<?php echo $_SESSION['user_id']; ?>">
+                                </div>
+                            <?php endif; ?>
                             <div class="cart mt-4 align-items-center">
-                                <?php if ($select->rowCount() > 0): ?>
-                                    <button id="submit" name="submit" type="submit" disabled
-                                        class="btn btn-primary text-uppercase mr-2 px-4"><i
-                                            class="fas fa-shopping-cart"></i>
-                                        Added to cart
-                                    </button>
-                                <?php else: ?>
-                                    <button id="submit" name="submit" type="submit"
-                                        class="btn btn-primary text-uppercase mr-2 px-4"><i
-                                            class="fas fa-shopping-cart"></i>
-                                        Add to cart
-                                    </button>
+                                <?php if (isset($_SESSION['user_id'])): ?>
+                                    <?php if ($select->rowCount() > 0): ?>
+                                        <button id="submit" name="submit" type="submit" disabled
+                                            class="btn btn-primary text-uppercase mr-2 px-4"><i
+                                                class="fas fa-shopping-cart"></i>
+                                            Added to cart
+                                        </button>
+                                    <?php else: ?>
+                                        <button id="submit" name="submit" type="submit"
+                                            class="btn btn-primary text-uppercase mr-2 px-4"><i
+                                                class="fas fa-shopping-cart"></i>
+                                            Add to cart
+                                        </button>
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             </div>
                         </form>
